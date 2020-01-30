@@ -1,11 +1,14 @@
 package com.example.restservice.controller;
 
 import com.example.restservice.entity.Message;
+import com.example.restservice.entity.Views;
 import com.example.restservice.repository.MessageRepository;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -19,6 +22,8 @@ public class MessageController {
     }
 
     @GetMapping
+    //    видим только поля помеченные этим интерфейсом
+    @JsonView(Views.IdName.class)
     public List<Message> list(){
         return messageRepository.findAll();
     }
@@ -29,6 +34,7 @@ public class MessageController {
 
     @PostMapping
     public Message create(@RequestBody Message message){
+        message.setCreationDate(LocalDateTime.now());
         return messageRepository.save(message);
     }
     @PutMapping("{id}")
